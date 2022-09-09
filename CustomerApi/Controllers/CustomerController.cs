@@ -21,19 +21,14 @@ namespace CustomerApi.Controllers
 
 
             [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CustomerDto))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<CustomerDto>))]
         public async Task<IActionResult> GetCustomers()
         {
-            List<CustomerDto> customers = new List<CustomerDto>();
-            var customer = new CustomerDto();
-            customer.Id = 1001;
-            customer.FirstName = "Leo";
-            customer.LastName = "Marqz";
-            customer.Email = "leomarqz200@gmail.com";
-            customer.Phone = "74811897";
-            customer.Address = "caserio llano alegre";
-            customers.Add(customer);
-            return new OkObjectResult(customers);
+            var result = _customerDatabaseContext
+                .Customer.Select(customer => customer.ToDto())
+                .ToList();
+
+            return new OkObjectResult(result);
         }
 
         [HttpGet("{id}")]
@@ -50,7 +45,8 @@ namespace CustomerApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
         public async Task<IActionResult> DeleteCustomer(long id)
         {
-            throw new NotImplementedException();
+            var result = await _customerDatabaseContext.Delete(id);
+            return new OkObjectResult(result);
         }
 
         [HttpPost]

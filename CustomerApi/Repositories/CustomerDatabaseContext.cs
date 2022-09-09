@@ -41,7 +41,15 @@ namespace CustomerApi.Repositories
             await SaveChangesAsync();
             return await Get(response.Entity.Id ?? throw new Exception("No se ha podido guardar!!") );
         }
-    }
+
+        public async Task<bool> Delete(long id)
+        {
+            CustomerEntity entity = await Get(id);
+            Customer.Remove(entity);
+            SaveChanges();
+            return true;
+        }
+    }   
 
     public class CustomerEntity
     {
