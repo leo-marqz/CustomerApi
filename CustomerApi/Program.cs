@@ -1,4 +1,5 @@
 using CustomerApi.Repositories;
+using CustomerApi.UseCases;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +19,8 @@ builder.Services.AddDbContext<CustomerDatabaseContext>(mysqlBuilder =>
         builder.Configuration.GetConnectionString("ConnectionToDatabaseSystem")
     );
 });
+
+builder.Services.AddScoped<IUpdateCustomerUseCase, UpdateCustomerUseCase>(); 
 
 var app = builder.Build();
 

@@ -21,9 +21,9 @@ namespace CustomerApi.Repositories
         //    return await Customer.
         //}
 
-        public async Task<CustomerEntity> Get(long id)
+        public async Task<CustomerEntity?> Get(long id)
         {
-            return await Customer.FirstAsync(x => x.Id == id);
+            return await Customer.FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public async Task<CustomerEntity> Add(CreateCustomerDto customer)
@@ -49,6 +49,14 @@ namespace CustomerApi.Repositories
             SaveChanges();
             return true;
         }
+
+        public async Task<bool> Update(CustomerEntity customer)
+        {
+            Customer.Update(customer);
+            await SaveChangesAsync();
+            return true;
+        }
+
     }   
 
     public class CustomerEntity

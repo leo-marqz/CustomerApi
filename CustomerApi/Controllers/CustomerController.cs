@@ -1,5 +1,6 @@
 ﻿using CustomerApi.Dtos;
 using CustomerApi.Repositories;
+using CustomerApi.UseCases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,10 +13,15 @@ namespace CustomerApi.Controllers
     public class CustomerController : Controller
     {
         private readonly CustomerDatabaseContext _customerDatabaseContext;
+        private readonly IUpdateCustomerUseCase _updateCustomerUseCase;
 
-        public CustomerController(CustomerDatabaseContext customerDatabaseContext)
+        public CustomerController(
+            CustomerDatabaseContext customerDatabaseContext,
+            IUpdateCustomerUseCase updateCustomerUseCase
+            )
         {
             this._customerDatabaseContext = customerDatabaseContext;
+            this._updateCustomerUseCase = updateCustomerUseCase;
         }
     
 
@@ -63,7 +69,9 @@ namespace CustomerApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CustomerDto))]
         public async Task<IActionResult> UpdateCustomer(CustomerDto customer)
         {
-            throw new NotImplementedException();
+            var result = await this._updateCustomerUseCase.Execute(customer);
+            if (result == null) return new NotFoundResult();
+            return new OkObjectResult(result);
         }
     }
 }
